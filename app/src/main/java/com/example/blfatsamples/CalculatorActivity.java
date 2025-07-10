@@ -1,5 +1,6 @@
 package com.example.blfatsamples;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Debug;
 import android.view.View;
@@ -20,6 +21,14 @@ public class CalculatorActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.calculator_activity);
+
+        findViewById(R.id.goBackButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(CalculatorActivity.this, MainActivity.class);
+                startActivities(new Intent[]{ intent });
+            }
+        });
 
         Button[] buttonsNumbers = new Button[]{
                 findViewById(R.id.btn0), findViewById(R.id.btn1), findViewById(R.id.btn2),
