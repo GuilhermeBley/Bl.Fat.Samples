@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BlFatSamples">
         <activity android:name=".CalculatorActivity" android:exported="false" />
+        <activity android:name=".CreateAccountActivity" android:exported="false" />
+        <activity android:name=".LoginActivity" android:exported="false" />
+        <activity android:name=".RecoveryPasswordActivity" android:exported="false" />
         <activity android:name=".MenuActivity" android:exported="false" />
         <activity
             android:name=".MainActivity"
