@@ -10,6 +10,8 @@ import androidx.activity.EdgeToEdge;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.blfatsamples.constants.Constant;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -18,6 +20,15 @@ public class MainActivity extends AppCompatActivity {
 
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
+
+        String email = getIntent().getStringExtra(Constant.Email);
+
+        if (email == null)
+        {
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            startActivities(new Intent[]{ intent });
+            return;
+        }
 
         findViewById(R.id.closeButton).setOnClickListener(new View.OnClickListener() {
             @Override

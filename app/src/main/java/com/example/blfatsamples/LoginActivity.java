@@ -8,6 +8,7 @@ import androidx.activity.EdgeToEdge;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.blfatsamples.model.UserLoginResultModel;
 import com.example.blfatsamples.services.IdentityService;
 
 import java.util.concurrent.CompletableFuture;
@@ -29,27 +30,28 @@ public class LoginActivity extends AppCompatActivity {
         findViewById(R.id.loginButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // get the user info async here
+                loginUserAsync();
             }
         });
     }
 
     private void loginUserAsync() {
-        // Show loading state
+
         setLoading(true);
 
         CompletableFuture.supplyAsync(() -> {
             // Background work (network call)
-            return new IdentityService().("username", "password");
-        }, backgroundExecutor)
+            return new IdentityService().login("username", "password");
+        }, mainThreadExecutor)
         .thenApplyAsync(userInfo -> {
             // Process result on background thread if needed
             return userInfo;
-        }, backgroundExecutor)
-        .thenAcceptAsync(userInfo -> {
+        }, mainThreadExecutor)
+        .whenCompleteAsync((userInfo, a) -> {
             // Update UI on main thread
+
             setLoading(false);
-            startMainActivity(userInfo);
+            startMainActivity(userInfo.getNow(null));
         }, mainThreadExecutor)
         .exceptionally(ex -> {
 
@@ -58,14 +60,25 @@ public class LoginActivity extends AppCompatActivity {
                     "Falha ao realizar o login.",
                     Toast.LENGTH_SHORT).show();
             return null;
-        }, mainThreadExecutor);
+        });
     }
 
     private void setLoading(boolean isLoading) {
         findViewById(R.id.loginButton).setEnabled(!isLoading);
     }
 
-    private void startMainActivity(UserInfo userInfo) {
+    private void startMainActivity(UserLoginResultModel userInfo) {
+
+        if (userInfo == null) {
+            Toast.makeText(LoginActivity.this,
+                    "Login ou senha inválidos...",
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Toast.makeText(LoginActivity.this,
+                "Logado com sucesso!!!",
+                Toast.LENGTH_SHORT).show();
         // Start next activity with the user info
         // Intent intent = new Intent(this, MainActivity.class);
         // intent.putExtra("USER_INFO", userInfo);

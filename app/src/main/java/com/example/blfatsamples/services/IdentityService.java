@@ -14,10 +14,19 @@ public class IdentityService {
         // fake loading simulating external api
         ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
         scheduler.schedule(() -> {
-            future.complete(new UserLoginResultModel("Guilherme", "Bley", "guilherme@email.com")); // Complete after delay
+
+            if (email == "guilherme@email.com" && password == "123")
+            {
+                future.complete(new UserLoginResultModel("Guilherme", "Bley", "guilherme@email.com")); // Complete after delay
+            }
+            else
+            {
+                future.complete(null); // Complete after delay
+            }
+
             scheduler.shutdown();
         }, 2, TimeUnit.SECONDS);
-        // ALTERAÇÃO TESTE
+
         return future;
     }
 }
