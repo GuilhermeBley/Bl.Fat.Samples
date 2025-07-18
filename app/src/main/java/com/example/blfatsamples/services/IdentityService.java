@@ -17,7 +17,7 @@ public class IdentityService {
             future.complete(new UserLoginResultModel("Guilherme", "Bley", "guilherme@email.com")); // Complete after delay
             scheduler.shutdown();
         }, 2, TimeUnit.SECONDS);
-
+        // ALTERAÇÃO TESTE
         return future;
     }
 }
