@@ -1,7 +1,11 @@
 package com.example.blfatsamples;
 
+import android.annotation.SuppressLint;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -35,36 +39,39 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+
+    @SuppressLint("StaticFieldLeak")
     private void loginUserAsync() {
-
         setLoading(true);
+        String login = ((EditText)findViewById(R.id.emailEditText)).getText().toString();
+        String password = ((EditText)findViewById(R.id.passwordEditText)).getText().toString();
+        new AsyncTask<Void, Void, UserLoginResultModel>() {
+            @Override
+            protected UserLoginResultModel doInBackground(Void... voids) {
+                try {
+                    return new IdentityService().login(login, password).get();
+                } catch (Exception e) {
+                    return null;
+                }
+            }
 
-        CompletableFuture.supplyAsync(() -> {
-            // Background work (network call)
-            return new IdentityService().login("username", "password");
-        }, mainThreadExecutor)
-        .thenApplyAsync(userInfo -> {
-            // Process result on background thread if needed
-            return userInfo;
-        }, mainThreadExecutor)
-        .whenCompleteAsync((userInfo, a) -> {
-            // Update UI on main thread
-
-            setLoading(false);
-            startMainActivity(userInfo.getNow(null));
-        }, mainThreadExecutor)
-        .exceptionally(ex -> {
-
-            setLoading(false);
-            Toast.makeText(LoginActivity.this,
-                    "Falha ao realizar o login.",
-                    Toast.LENGTH_SHORT).show();
-            return null;
-        });
+            @Override
+            protected void onPostExecute(UserLoginResultModel userInfo) {
+                setLoading(false);
+                startMainActivity(userInfo);
+            }
+        }.execute();
     }
 
     private void setLoading(boolean isLoading) {
-        findViewById(R.id.loginButton).setEnabled(!isLoading);
+        Button btn = findViewById(R.id.loginButton);
+        if (isLoading){
+            btn.setEnabled(false);
+            btn.setText("Logando...");
+        }else{
+            btn.setEnabled(true);
+            btn.setText("Login");
+        }
     }
 
     private void startMainActivity(UserLoginResultModel userInfo) {
