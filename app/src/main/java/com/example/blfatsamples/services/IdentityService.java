@@ -8,23 +8,20 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class IdentityService {
-    public CompletableFuture<UserLoginResultModel> login(String email, String password){
+    public CompletableFuture<UserLoginResultModel> login(String email, String password) {
         CompletableFuture<UserLoginResultModel> future = new CompletableFuture<>();
 
-        // fake loading simulating external api
         ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
         scheduler.schedule(() -> {
-
-            if (email == "guilherme@email.com" && password == "123")
-            {
-                future.complete(new UserLoginResultModel("Guilherme", "Bley", "guilherme@email.com")); // Complete after delay
+            try {
+                if ("guilherme@email.com".equals(email) && "123".equals(password)) {
+                    future.complete(new UserLoginResultModel("Guilherme", "Bley", "guilherme@email.com"));
+                } else {
+                    future.complete(null);
+                }
+            } finally {
+                scheduler.shutdown();
             }
-            else
-            {
-                future.complete(null); // Complete after delay
-            }
-
-            scheduler.shutdown();
         }, 2, TimeUnit.SECONDS);
 
         return future;
