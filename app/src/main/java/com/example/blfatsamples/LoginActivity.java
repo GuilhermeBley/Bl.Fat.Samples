@@ -49,7 +49,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             protected UserLoginResultModel doInBackground(Void... voids) {
                 try {
-                    return new IdentityService().login(login, password).get();
+                    return new IdentityService().login(login, password).get(); // TODO: check why is it returning null
                 } catch (Exception e) {
                     return null;
                 }
