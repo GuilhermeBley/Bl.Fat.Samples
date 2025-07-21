@@ -1,6 +1,7 @@
 package com.example.blfatsamples;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -12,17 +13,11 @@ import androidx.activity.EdgeToEdge;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.blfatsamples.constants.Constant;
 import com.example.blfatsamples.model.UserLoginResultModel;
 import com.example.blfatsamples.services.IdentityService;
 
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-
 public class LoginActivity extends AppCompatActivity {
-
-    private final Executor backgroundExecutor = Executors.newSingleThreadExecutor();
-    private final Executor mainThreadExecutor = runnable -> runOnUiThread(runnable);
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -38,7 +33,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
-
 
     @SuppressLint("StaticFieldLeak")
     private void loginUserAsync() {
@@ -79,18 +73,16 @@ public class LoginActivity extends AppCompatActivity {
     private void startMainActivity(UserLoginResultModel userInfo) {
 
         if (userInfo == null) {
-            Toast.makeText(LoginActivity.this,
-                    "Login ou senha inválidos...",
-                    Toast.LENGTH_SHORT).show();
+            Toast.makeText(LoginActivity.this, "Login ou senha inválidos...",  Toast.LENGTH_SHORT).show();
             return;
         }
 
-        Toast.makeText(LoginActivity.this,
-                "Logado com sucesso!!!",
-                Toast.LENGTH_SHORT).show();
-        // Start next activity with the user info
-        // Intent intent = new Intent(this, MainActivity.class);
-        // intent.putExtra("USER_INFO", userInfo);
-        // startActivity(intent);
+        Toast.makeText(LoginActivity.this, "Logado com sucesso!!!", Toast.LENGTH_SHORT).show();
+        Intent intentLogin = new Intent(this, MainActivity.class);
+        intentLogin.putExtra(Constant.UserName, userInfo.getEmail());
+        intentLogin.putExtra(Constant.Email, userInfo.getEmail());
+        intentLogin.putExtra(Constant.Name, userInfo.getName() + " " + userInfo.getLastName());
+        Constant.setUserInfo(userInfo);
+        startActivities(new Intent[]{ intentLogin });
     }
 }

@@ -21,7 +21,9 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
-        String email = getIntent().getStringExtra(Constant.Email);
+        String email = Constant.getUserInfo() != null
+            ? Constant.getUserInfo().getEmail()
+            : null;
 
         if (email == null)
         {
