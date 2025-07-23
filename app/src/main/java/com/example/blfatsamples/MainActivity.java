@@ -36,21 +36,5 @@ public class MainActivity extends AppCompatActivity {
                 finishAffinity();
             }
         });
-
-        findViewById(R.id.menuButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, MenuActivity.class);
-                startActivities(new Intent[]{ intent });
-            }
-        });
-
-        findViewById(R.id.calculatorButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, CalculatorActivity.class);
-                startActivities(new Intent[]{ intent });
-            }
-        });
     }
 }
