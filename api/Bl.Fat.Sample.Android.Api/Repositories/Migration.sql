@@ -1,3 +1,6 @@
+CREATE IF EXISTS SCHEMA `menu`;
+USE `menu`;
+
 CREATE TABLE `Products` (
     `Id` INT NOT NULL AUTO_INCREMENT,
     `Name` VARCHAR(250) NOT NULL,

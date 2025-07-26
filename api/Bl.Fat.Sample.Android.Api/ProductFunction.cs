@@ -21,7 +21,7 @@ public class ProductFunction
 
     [Function("ProductFunctionGetAll")]
     public async Task<IActionResult> GetProductsAsync(
-        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "api/product")] HttpRequest req)
+        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "product")] HttpRequest req)
     {
         var items = await _menuContext
             .Products
@@ -33,7 +33,8 @@ public class ProductFunction
                 x.Description,
                 x.CreatedAt,
                 x.ImageUrl,
-                x.Price
+                x.Price,
+                x.Category
             }).ToListAsync();
 
         if (items == null || !items.Any())
