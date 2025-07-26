@@ -24,7 +24,7 @@ public class UserFunction
 
     [Function("UserFunctionCreateUser")]
     public async Task<IActionResult> CreateUserAsync(
-        [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "api/user")] HttpRequest req)
+        [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "user")] HttpRequest req)
     {
         try
         {
@@ -69,7 +69,7 @@ public class UserFunction
 
     [Function("UserFunctionLoginUserAsync")]
     public async Task<IActionResult> LoginUserAsync(
-        [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "api/user/login")] HttpRequest req)
+        [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "user/login")] HttpRequest req)
     {
         try
         {
