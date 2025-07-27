@@ -1,5 +1,6 @@
 package com.example.blfatsamples;
 
+import android.content.Intent;
 import android.text.TextUtils;
 import android.os.Bundle;
 import android.util.Patterns;
@@ -32,6 +33,19 @@ public class CreateAccountActivity extends AppCompatActivity {
 
         EdgeToEdge.enable(this);
         setContentView(R.layout.create_account_activity);
+
+        int[] redirectLoginViewsIds = new int[] {
+            R.id.loginText, R.id.redirectLogin
+        };
+        for (int redirectLoginid : redirectLoginViewsIds) {
+            findViewById(redirectLoginid).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent redirectLogin = new Intent(CreateAccountActivity.this, LoginActivity.class);
+                    startActivity(redirectLogin);
+                }
+            });
+        }
 
         findViewById(R.id.registerButton)
             .setOnClickListener(new View.OnClickListener() {
@@ -91,9 +105,9 @@ public class CreateAccountActivity extends AppCompatActivity {
         // If all validations pass, create the user
         try {
             JSONObject userJson = new JSONObject();
-            userJson.put("email", email);
-            userJson.put("password", password);
-            userJson.put("name", name);
+            userJson.put("Email", email);
+            userJson.put("Password", password);
+            userJson.put("Name", name);
 
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                     Request.Method.POST,
@@ -102,7 +116,7 @@ public class CreateAccountActivity extends AppCompatActivity {
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
-                            if (response.has("user")) {
+
                                 Toast.makeText(CreateAccountActivity.this, "Usuário registrado com sucesso! Efetue o login.", Toast.LENGTH_SHORT).show();
                                 var inputsToDisable = new EditText[] {
                                   emailEditText, nameEditText, confirmPassowrdEditText, passwordEditText
@@ -113,7 +127,7 @@ public class CreateAccountActivity extends AppCompatActivity {
                                 submitButton.setVisibility(View.INVISIBLE);
                                 findViewById(R.id.loginText).setVisibility(View.INVISIBLE);
                                 redirectButton.setVisibility(View.VISIBLE);
-                            }
+
                         }
                     },
                     new Response.ErrorListener() {

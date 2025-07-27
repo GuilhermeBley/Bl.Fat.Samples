@@ -30,7 +30,7 @@ public class UserFunction
         {
             // Read request body
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            var userInput = JsonSerializer.Deserialize<UserModel>(requestBody);
+            var userInput = JsonSerializer.Deserialize<CreateUserModel>(requestBody);
 
             if (userInput == null || string.IsNullOrEmpty(userInput.Email) || string.IsNullOrEmpty(userInput.Password))
             {
