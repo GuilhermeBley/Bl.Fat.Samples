@@ -32,6 +32,14 @@ public class LoginActivity extends AppCompatActivity {
                 loginUserAsync();
             }
         });
+
+        findViewById(R.id.registerUserText).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intentCreateAccount = new Intent(LoginActivity.this, CreateAccountActivity.class);
+                startActivity(intentCreateAccount);
+            }
+        });
     }
 
     @SuppressLint("StaticFieldLeak")

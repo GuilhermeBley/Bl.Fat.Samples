@@ -88,7 +88,7 @@
 
     <!-- Register Link -->
     <TextView
-        android:id="@+id/registerText"
+        android:id="@+id/registerUserText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
