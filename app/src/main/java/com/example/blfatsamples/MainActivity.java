@@ -23,6 +23,7 @@ import com.example.blfatsamples.constants.ApiQueue;
 import com.example.blfatsamples.constants.Constant;
 import com.example.blfatsamples.constants.ConstantUrl;
 import com.example.blfatsamples.model.ProductModel;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,6 +35,8 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private List<ProductModel> featuredProducts = new ArrayList<>();
+    private BottomNavigationView bottomNavigationView;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,12 +53,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        findViewById(R.id.closeButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finishAffinity();
-            }
-        });
+        setUpNavigation();
 
         setFeaturedProducts();
     }
@@ -106,5 +104,26 @@ public class MainActivity extends AppCompatActivity {
 
         // Add the request to the RequestQueue using the singleton
         ApiQueue.getInstance(this).addToRequestQueue(jsonArrayRequest);
+    }
+
+    private  void setUpNavigation()
+    {
+        bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+            if (itemId == R.id.menu_home){
+                return true;
+            }
+            if (itemId == R.id.menu_menu){
+                return true;
+            }
+            if (itemId == R.id.menu_cart){
+                return true;
+            }
+            if (itemId == R.id.menu_profile){
+                return true;
+            }
+            return false;
+        });
     }
 }
