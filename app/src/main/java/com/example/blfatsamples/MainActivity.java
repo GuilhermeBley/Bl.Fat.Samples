@@ -112,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
             int itemId = item.getItemId();
             if (itemId == R.id.menu_home){
+                // do nothing here, you're already in this screen
                 return true;
             }
             if (itemId == R.id.menu_menu){
@@ -121,6 +122,7 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
             if (itemId == R.id.menu_profile){
+                startActivity(new Intent(this, UserInfoActivity.class));
                 return true;
             }
             return false;
