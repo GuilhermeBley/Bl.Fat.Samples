@@ -122,7 +122,7 @@ public class UserFunction
 
     [Function("UserFunctionGetUserByIdAsync")]
     public async Task<IActionResult> GetUserByIdAsync(
-        [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "user/id")] HttpRequest req)
+        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "user/id")] HttpRequest req)
     {
         try
         {
