@@ -122,6 +122,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/confirmPasswordInputLayout" />
 
+    <!-- Redirect login button -->
+    <Button
+        android:id="@+id/redirectLogin"
+        android:visibility="invisible"
+        android:layout_width="250dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="48dp"
+        android:text="Ir para o Login"
+        android:textSize="18sp"
+        android:backgroundTint="@color/orange"
+        android:textColor="#FFFFFF"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/confirmPasswordInputLayout" />
+
     <!-- Login Link -->
     <TextView
         android:id="@+id/loginText"

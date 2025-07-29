@@ -52,7 +52,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
         ProductModel produto = products.get(position);
 
-        holder.productImage.setImageURI(Uri.parse(produto.getImgUrl()));
         holder.name.setText(produto.getName());
         holder.description.setText(produto.getDescription());
 

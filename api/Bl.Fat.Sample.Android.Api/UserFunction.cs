@@ -1,11 +1,12 @@
 using Bl.Fat.Sample.Android.Api.Model;
 using Bl.Fat.Sample.Android.Api.Repositories;
+using Bl.Fat.Sample.Android.Api.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
-using System.Text.Json;
 using System.Text;
+using System.Text.Json;
 
 namespace Bl.Fat.Sample.Android.Api;
 
@@ -13,13 +14,16 @@ public class UserFunction
 {
     private readonly ILogger<UserFunction> _logger;
     private readonly MenuContext _menuContext;
+    private readonly BlAuthenticationService _auth;
 
     public UserFunction(
         ILogger<UserFunction> logger,
-        MenuContext menuContext)
+        MenuContext menuContext,
+        BlAuthenticationService auth)
     {
         _logger = logger;
         _menuContext = menuContext;
+        _auth = auth;
     }
 
     [Function("UserFunctionCreateUser")]
@@ -30,7 +34,7 @@ public class UserFunction
         {
             // Read request body
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            var userInput = JsonSerializer.Deserialize<UserModel>(requestBody);
+            var userInput = JsonSerializer.Deserialize<CreateUserModel>(requestBody);
 
             if (userInput == null || string.IsNullOrEmpty(userInput.Email) || string.IsNullOrEmpty(userInput.Password))
             {
@@ -104,8 +108,47 @@ public class UserFunction
                     user.PhoneNumber,
                     user.Address,
                     user.Id,
-                    user.CreatedAt
+                    user.CreatedAt,
+                    Token = _auth.GenerateToken(user.Id, user.Name, user.Email)
                 } 
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error during login");
+            return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+        }
+    }
+
+    [Function("UserFunctionGetUserByIdAsync")]
+    public async Task<IActionResult> GetUserByIdAsync(
+        [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "user/id")] HttpRequest req)
+    {
+        try
+        {
+            var claims = _auth.GetClaims(req);
+            var userId = claims.GetUserIdOrDefault();
+            if (userId is null)  return new UnauthorizedResult();
+
+            var userInfo = await _menuContext
+                .Users
+                .AsNoTracking()
+                .Where(u => u.Id == userId)
+                .Select(x => new
+                {
+                    x.Id,
+                    x.Name,
+                    x.Email,
+                    x.PhoneNumber,
+                    x.Address,
+                    x.CreatedAt
+                })
+                .FirstOrDefaultAsync();
+
+            return new OkObjectResult(new
+            {
+                Message = "User retrieved successfully",
+                User = userInfo
             });
         }
         catch (Exception ex)
@@ -119,6 +162,6 @@ public class UserFunction
 // Helper class for login request
 public class LoginRequest
 {
-    public string Email { get; set; }
-    public string Password { get; set; }
+    public string? Email { get; set; }
+    public string? Password { get; set; }
 }
