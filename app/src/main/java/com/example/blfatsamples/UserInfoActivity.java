@@ -10,6 +10,7 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -20,6 +21,7 @@ import com.example.blfatsamples.constants.ApiQueue;
 import com.example.blfatsamples.constants.Constant;
 import com.example.blfatsamples.constants.ConstantUrl;
 import com.example.blfatsamples.model.ProductModel;
+import com.example.blfatsamples.model.UserLoginResultModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -27,8 +29,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class UserInfoActivity extends AppCompatActivity {
+import java.util.HashMap;
+import java.util.Map;
 
+public class UserInfoActivity extends AppCompatActivity {
+    private UserLoginResultModel userInfo;
     private TextInputEditText inputName, inputEmail, inputPhone, inputAddress;
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -36,6 +41,12 @@ public class UserInfoActivity extends AppCompatActivity {
 
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_user_info);
+
+        userInfo = Constant.getUserInfo();
+
+        if (userInfo == null){
+            startActivity(new Intent(this, LoginActivity.class));
+        }
 
         inputName = findViewById(R.id.userinfo_input_name);
         inputEmail = findViewById(R.id.userinfo_input_email);
@@ -53,6 +64,7 @@ public class UserInfoActivity extends AppCompatActivity {
     private void loadUserData() {
 
         String url = ConstantUrl.GetCurrentUser;
+        String token = userInfo.getToken();
 
         // Create a StringRequest
 
@@ -101,7 +113,15 @@ public class UserInfoActivity extends AppCompatActivity {
                         Toast.makeText(UserInfoActivity.this, "Falha em coleta de dados do usuário.", Toast.LENGTH_SHORT).show();
                     }
                 }
-            });
+            }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                headers.put("Content-Type", "application/json");
+                return headers;
+            }
+        };
 
         // Add the request to the RequestQueue using the singleton
         ApiQueue.getInstance(this).addToRequestQueue(jsonArrayRequest);

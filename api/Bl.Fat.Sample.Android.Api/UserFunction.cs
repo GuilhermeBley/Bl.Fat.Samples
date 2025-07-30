@@ -5,8 +5,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 
 namespace Bl.Fat.Sample.Android.Api;
 
@@ -54,7 +56,7 @@ public class UserFunction
                 Name = userInput.Name,
                 Email = userInput.Email,
                 Password = userInput.Password, // In production, you should hash the password
-                Address = userInput.Address,
+                Address = userInput.Address is null || userInput.Address is string ? null : JsonSerializer.Serialize(userInput.Address),
                 PhoneNumber = userInput.PhoneNumber,
                 CreatedAt = DateTime.UtcNow
             };
@@ -140,7 +142,7 @@ public class UserFunction
                     x.Name,
                     x.Email,
                     x.PhoneNumber,
-                    x.Address,
+                    Address = GetAddressObj(x.Address),
                     x.CreatedAt
                 })
                 .FirstOrDefaultAsync();
@@ -155,6 +157,66 @@ public class UserFunction
         {
             _logger.LogError(ex, "Error during login");
             return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+        }
+    }
+
+    [Function("UserFunctionUpdateUserAsync")]
+    public async Task<IActionResult> UpdateUserAsync(
+    [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "user")] HttpRequest req)
+    {
+        try
+        {
+            var claims = _auth.GetClaims(req);
+            var userId = claims.GetUserIdOrDefault();
+            if (userId is null)
+                return new UnauthorizedResult();
+
+            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+            var updateModel = JsonSerializer.Deserialize<UpdateUserModel>(requestBody, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
+
+            if (updateModel == null || string.IsNullOrWhiteSpace(updateModel.Email) || string.IsNullOrWhiteSpace(updateModel.Name))
+            {
+                return new BadRequestObjectResult("Name and email are required.");
+            }
+
+            var user = await _menuContext.Users.FirstOrDefaultAsync(u => u.Id == userId);
+            if (user == null)
+                return new NotFoundObjectResult("User not found.");
+
+            // Update fields
+            user.Name = updateModel.Name;
+            user.Email = updateModel.Email;
+            user.PhoneNumber = updateModel.PhoneNumber;
+            user.Address = updateModel.Address is null || updateModel.Address is string
+                ? null
+                : JsonSerializer.Serialize(updateModel.Address);
+
+            _menuContext.Users.Update(user);
+            await _menuContext.SaveChangesAsync();
+
+            return new OkObjectResult(new { Message = "User updated successfully" });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error updating user");
+            return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+        }
+    }
+
+
+    private static JsonNode? GetAddressObj(string? address)
+    {
+        if (string.IsNullOrEmpty(address)) return null;
+        try
+        {
+            return JsonNode.Parse(address) ?? new JsonObject();
+        }
+        catch (JsonException)
+        {
+            return new JsonObject { ["error"] = "Invalid address format" };
         }
     }
 }

@@ -43,7 +43,7 @@ public class BlAuthenticationService
             var result = tokenHandler.ValidateToken(token, new TokenValidationParameters
             {
                 ValidateIssuer = false,
-                ValidateAudience = true,
+                ValidateAudience = false,
                 ValidateIssuerSigningKey = false,
                 IssuerSigningKey = signingKey,
                 ValidateLifetime = true,
@@ -77,7 +77,7 @@ public class BlAuthenticationService
             var result = tokenHandler.ValidateToken(authorizationToken, new TokenValidationParameters
             {
                 ValidateIssuer = false,
-                ValidateAudience = true,
+                ValidateAudience = false,
                 ValidateIssuerSigningKey = false,
                 IssuerSigningKey = signingKey,
                 ValidateLifetime = true,
