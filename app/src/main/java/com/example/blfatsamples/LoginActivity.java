@@ -2,6 +2,7 @@ package com.example.blfatsamples;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -13,11 +14,20 @@ import androidx.activity.EdgeToEdge;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.example.blfatsamples.constants.ApiQueue;
 import com.example.blfatsamples.constants.Constant;
+import com.example.blfatsamples.constants.ConstantUrl;
 import com.example.blfatsamples.model.UserLoginResultModel;
-import com.example.blfatsamples.services.IdentityService;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class LoginActivity extends AppCompatActivity {
+    private SharedPreferences preference;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,31 +50,81 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intentCreateAccount);
             }
         });
+
+        preference = getSharedPreferences(Constant.SharedPreferenceLogin, MODE_PRIVATE);
+        if (Constant.getUserInfo(preference) != null){
+            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+            return;
+        }
     }
 
-    @SuppressLint("StaticFieldLeak")
     private void loginUserAsync() {
         setLoading(true);
         String login = ((EditText)findViewById(R.id.emailEditText)).getText().toString();
         String password = ((EditText)findViewById(R.id.passwordEditText)).getText().toString();
-        new AsyncTask<Void, Void, UserLoginResultModel>() {
-            @Override
-            protected UserLoginResultModel doInBackground(Void... voids) {
-                try {
-                    UserLoginResultModel model = new IdentityService().login(login, password).get(); // TODO: check why is it returning null
 
-                    return model;
-                } catch (Exception e) {
-                    return null;
-                }
-            }
 
-            @Override
-            protected void onPostExecute(UserLoginResultModel userInfo) {
-                setLoading(false);
-                startMainActivity(userInfo);
-            }
-        }.execute();
+        // If all validations pass, create the user
+        try {
+            JSONObject userJson = new JSONObject();
+            userJson.put("Email ", login);
+            userJson.put("Password", password);
+
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                    Request.Method.POST,
+                    ConstantUrl.PostUserLogin,
+                    userJson,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            setLoading(false);
+                            try {
+                                String token = response.getString("Token");
+                                String email = response.getString("Email");
+                                String name = response.getString("Name");
+                                int id = response.getInt("Id");
+
+                                Constant.setUserInfo(
+                                        new UserLoginResultModel(id, name, token, email),
+                                        preference);
+
+                                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+
+                            } catch (JSONException e) {
+                                Toast.makeText(LoginActivity.this, "Falha no login. Tente novamente.", Toast.LENGTH_SHORT).show();
+                            }
+
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            setLoading(false);
+
+                            if (error.networkResponse != null) {
+                                int statusCode = error.networkResponse.statusCode;
+
+                                switch (statusCode) {
+                                    case 401: // bad request
+                                        Toast.makeText(LoginActivity.this, "Login ou senha inválidos. Tente outro ou crie uma conta.", Toast.LENGTH_SHORT).show();
+                                        break;
+                                    default:
+                                        break;
+                                }
+
+                                Toast.makeText(LoginActivity.this, "Falha no login. Tente novamente.", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+
+            // Add the request to the RequestQueue using the singleton
+            ApiQueue.getInstance(this).addToRequestQueue(jsonObjectRequest);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Falha ao logar.", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     private void setLoading(boolean isLoading) {
@@ -87,10 +147,6 @@ public class LoginActivity extends AppCompatActivity {
 
         Toast.makeText(LoginActivity.this, "Logado com sucesso!!!", Toast.LENGTH_SHORT).show();
         Intent intentLogin = new Intent(this, MainActivity.class);
-        intentLogin.putExtra(Constant.UserName, userInfo.getEmail());
-        intentLogin.putExtra(Constant.Email, userInfo.getEmail());
-        intentLogin.putExtra(Constant.Name, userInfo.getName() + " " + userInfo.getLastName());
-        Constant.setUserInfo(userInfo);
         startActivities(new Intent[]{ intentLogin });
     }
 }
