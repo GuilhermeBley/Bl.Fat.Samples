@@ -1,18 +1,23 @@
 package com.example.blfatsamples.model;
 
 public class UserLoginResultModel {
+    private  int id;
     private  String name;
-    private  String lastName;
+    private  String token;
     private  String email;
 
-    public UserLoginResultModel(String name, String lastName, String email) {
+    public UserLoginResultModel(int id, String name, String token, String email) {
+        this.id = id;
         this.name = name;
-        this.lastName = lastName;
+        this.token = token;
         this.email = email;
     }
 
-    public String getLastName() {
-        return lastName;
+    public int getId() {
+        return id;
+    }
+    public String getToken() {
+        return token;
     }
 
     public String getName() {
