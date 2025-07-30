@@ -77,19 +77,19 @@ public class UserInfoActivity extends AppCompatActivity {
                     public void onResponse(JSONObject userObject) {
                         try {
                             // Get the nested User object
-                            JSONObject user = userObject.getJSONObject("User");
+                            JSONObject user = userObject.getJSONObject("user");
 
                             // Extract user information
-                            String name = user.optString("Name", "");
-                            String email = user.optString("Email", "");
-                            String phone = user.optString("PhoneNumber", "");
-                            String address = user.optString("Address", "");
+                            String name = user.isNull("name") ? "" : user.optString("name", "");
+                            String email = user.isNull("email") ? "" : user.optString("email", "");
+                            String phone = user.isNull("phoneNumber") ? "" : user.optString("phoneNumber", "");
+                            String address = user.isNull("address") ? "" : user.optString("address", "");
 
                             // Set the values to the input fields
-                            inputName.setText(name.isEmpty() ? "Nome não informado" : name);
-                            inputEmail.setText(email.isEmpty() ? "E-mail não informado" : email);
-                            inputPhone.setText(phone.isEmpty() ? "Telefone não informado" : formatPhoneNumber(phone));
-                            inputAddress.setText(address.isEmpty() ? "Endereço não informado" : address);
+                            inputName.setText(name.isEmpty() ? "" : name);
+                            inputEmail.setText(email.isEmpty() ? "" : email);
+                            inputPhone.setText(phone.isEmpty() ? "" : formatPhoneNumber(phone));
+                            inputAddress.setText(address.isEmpty() ? "" : address);
                         } catch (JSONException e) {
                             e.printStackTrace();
                             Log.e("JSONError", "Error parsing JSON: " + e.getMessage());
