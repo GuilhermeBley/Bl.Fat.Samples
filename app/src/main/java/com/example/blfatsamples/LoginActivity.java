@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -59,15 +61,34 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void loginUserAsync() {
-        setLoading(true);
-        String login = ((EditText)findViewById(R.id.emailEditText)).getText().toString();
-        String password = ((EditText)findViewById(R.id.passwordEditText)).getText().toString();
+        EditText loginEditText = findViewById(R.id.emailEditText);
+        EditText passwordEditText = findViewById(R.id.passwordEditText);
+        String login = loginEditText.getText().toString();
+        String password = passwordEditText.getText().toString();
+
+        if (TextUtils.isEmpty(login)) {
+            loginEditText.setError("E-mail é obrigatório.");
+            return;
+        } else if (!Patterns.EMAIL_ADDRESS.matcher(login).matches()) {
+            loginEditText.setError("Coloque um e-mail válido.");
+            return;
+        }
+
+        // Validate password
+        if (TextUtils.isEmpty(password)) {
+            passwordEditText.setError("Insira uma senha.");
+            return;
+        } else if (password.length() < 8) {
+            passwordEditText.setError("A senha deve conter no mínimo 8 caracteres.");
+            return;
+        }
 
 
         // If all validations pass, create the user
         try {
+            setLoading(true);
             JSONObject userJson = new JSONObject();
-            userJson.put("Email ", login);
+            userJson.put("Email", login);
             userJson.put("Password", password);
 
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
@@ -77,12 +98,12 @@ public class LoginActivity extends AppCompatActivity {
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
-                            setLoading(false);
                             try {
-                                String token = response.getString("Token");
-                                String email = response.getString("Email");
-                                String name = response.getString("Name");
-                                int id = response.getInt("Id");
+                                var userJson = response.getJSONObject("user");
+                                String token = userJson.getString("token");
+                                String email = userJson.getString("email");
+                                String name = userJson.getString("name");
+                                int id = userJson.getInt("id");
 
                                 Constant.setUserInfo(
                                         new UserLoginResultModel(id, name, token, email),
@@ -92,6 +113,9 @@ public class LoginActivity extends AppCompatActivity {
 
                             } catch (JSONException e) {
                                 Toast.makeText(LoginActivity.this, "Falha no login. Tente novamente.", Toast.LENGTH_SHORT).show();
+                            }
+                            finally {
+                                setLoading(false);
                             }
 
                         }
@@ -124,7 +148,6 @@ public class LoginActivity extends AppCompatActivity {
             e.printStackTrace();
             Toast.makeText(this, "Falha ao logar.", Toast.LENGTH_SHORT).show();
         }
-
     }
 
     private void setLoading(boolean isLoading) {
