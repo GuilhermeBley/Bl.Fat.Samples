@@ -109,6 +109,7 @@ public class MainActivity extends AppCompatActivity {
     private  void setUpNavigation()
     {
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.setSelectedItemId(R.id.menu_home);
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
             int itemId = item.getItemId();
             if (itemId == R.id.menu_home){
@@ -116,6 +117,7 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
             if (itemId == R.id.menu_menu){
+                startActivity(new Intent(this, MenuActivity.class));
                 return true;
             }
             if (itemId == R.id.menu_cart){
