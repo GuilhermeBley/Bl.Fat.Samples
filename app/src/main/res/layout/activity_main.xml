@@ -42,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"
                 android:background="@drawable/border"
-                android:hint="Buscar lanches, porções, bebidas..."
+                android:hint="Buscar pratos, bebidas, doces..."
                 android:inputType="text"
                 android:padding="12dp"
                 android:textColor="@color/cardview_light_background"
@@ -74,7 +74,7 @@
                 android:orientation="horizontal">
 
                 <LinearLayout
-                    android:id="@+id/category_lanches"
+                    android:id="@+id/category_food"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -100,13 +100,13 @@
                         android:layout_marginTop="4dp"
                         android:ellipsize="end"
                         android:maxLines="1"
-                        android:text="Lanches"
+                        android:text="Pratos"
                         android:textColor="@color/black"
                         android:textSize="14sp" />
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/category_porcoes"
+                    android:id="@+id/category_dessert"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
@@ -124,7 +124,7 @@
                         android:layout_height="60dp"
                         android:contentDescription="Categoria Porções"
                         android:gravity="center"
-                        android:text="🍟"
+                        android:text="🍰"
                         android:textColor="@color/black"
                         android:textSize="48sp" />
 
@@ -134,13 +134,13 @@
                         android:layout_marginTop="4dp"
                         android:ellipsize="end"
                         android:maxLines="1"
-                        android:text="Porções"
+                        android:text="Doces"
                         android:textColor="@color/black"
                         android:textSize="14sp" />
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/category_bebidas"
+                    android:id="@+id/category_drink"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

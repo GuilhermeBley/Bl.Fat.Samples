@@ -142,7 +142,8 @@ public class UserInfoActivity extends AppCompatActivity {
                 startActivity(new Intent(this, MainActivity.class));
                 return true;
             }
-            if (itemId == R.id.menu_menu){
+            if (itemId == R.id.menu_menu) {
+                startActivity(new Intent(this, MenuActivity.class));
                 return true;
             }
             if (itemId == R.id.menu_cart){

@@ -81,14 +81,15 @@ public class MainActivity extends AppCompatActivity {
                                     productJson.getString("name"),
                                     productJson.getString("description"),
                                     productJson.isNull("imageUrl") ? null : productJson.getString("imageUrl"),
+                                    productJson.getString("category"),
                                     productJson.getDouble("price")
                             );
 
                             featuredProducts.add(product);
-
-                            ProductAdapter adapter = new ProductAdapter(featuredProducts);
-                            listagemProdutoDestaque.setAdapter(adapter);
                         }
+
+                        ProductAdapter adapter = new ProductAdapter(featuredProducts);
+                        listagemProdutoDestaque.setAdapter(adapter);
 
                     } catch (JSONException e) {
                         e.printStackTrace();

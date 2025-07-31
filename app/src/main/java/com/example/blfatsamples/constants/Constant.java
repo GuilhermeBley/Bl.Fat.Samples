@@ -27,6 +27,7 @@ public class Constant {
         SharedPreferences.Editor editor = preference.edit();
         if (UserInfo == null){
             editor.clear();
+            editor.apply();
             return;
         }
 
@@ -34,6 +35,7 @@ public class Constant {
         editor.putString(Email, userInfo.getEmail());
         editor.putString(Token, userInfo.getToken());
         editor.putInt(UserId, userInfo.getId());
+        editor.apply();
     }
 
     public static UserLoginResultModel getUserInfo(SharedPreferences preference) {

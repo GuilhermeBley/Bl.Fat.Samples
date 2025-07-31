@@ -4,13 +4,23 @@ public class ProductModel {
     private String Name;
     private  String Description;
     private  String ImgUrl;
+    private  String Category;
     private  double Price;
 
-    public ProductModel(String name, String description, String imgUrl, double price) {
+    public ProductModel(String name, String description, String imgUrl, String category, double price) {
         Name = name;
         Description = description;
         ImgUrl = imgUrl;
         Price = price;
+        Category = category;
+    }
+
+    public String getCategory() {
+        return this.Category;
+    }
+
+    public void setCategory(String category) {
+        Category = category;
     }
 
     public String getName() {

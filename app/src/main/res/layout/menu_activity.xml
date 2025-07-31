@@ -13,6 +13,7 @@
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="@+id/bottomNavigationView"
         app:layout_constraintEnd_toEndOf="parent"
+        android:nestedScrollingEnabled="true"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -31,6 +32,7 @@
                 android:background="@drawable/border"
                 android:hint="Buscar lanches, porções, bebidas..."
                 android:inputType="text"
+                android:nestedScrollingEnabled="true"
                 android:padding="12dp"
                 android:textColor="@color/cardview_light_background"
                 android:textColorHint="@color/secondary" />
@@ -44,28 +46,28 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/btn_lanches"
+                    android:id="@+id/btn_food_filter"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginEnd="4dp"
                     android:background="@drawable/border"
-                    android:text="Lanches🍔"
+                    android:text="Pratos🍔"
                     android:textColor="@color/black" />
 
                 <Button
-                    android:id="@+id/btn_porcoes"
+                    android:id="@+id/btn_dessert_filter"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginStart="4dp"
                     android:layout_marginEnd="4dp"
                     android:background="@drawable/border"
-                    android:text="Porções🍟"
+                    android:text="Sobremesas🍰"
                     android:textColor="@color/black" />
 
                 <Button
-                    android:id="@+id/btn_bebidas"
+                    android:id="@+id/btn_drink_filter"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -90,7 +92,7 @@
                 android:id="@+id/recycler_view_all_products"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:nestedScrollingEnabled="false"
+                android:nestedScrollingEnabled="true"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:listitem="@layout/item_product_card" />
 
