@@ -28,13 +28,14 @@
                 android:id="@+id/edit_text_search"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
                 android:background="@drawable/border"
                 android:hint="Buscar lanches, porções, bebidas..."
                 android:inputType="text"
                 android:nestedScrollingEnabled="true"
                 android:padding="12dp"
-                android:textColor="@color/cardview_light_background"
+                android:textColor="@color/black"
                 android:textColorHint="@color/secondary" />
 
             <!-- Category Buttons -->
@@ -47,34 +48,36 @@
 
                 <Button
                     android:id="@+id/btn_food_filter"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="4dp"
-                    android:background="@drawable/border"
+                    android:singleLine="true"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:layout_marginHorizontal="1dp"
                     android:text="Pratos🍔"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/white" />
 
                 <Button
                     android:id="@+id/btn_dessert_filter"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="4dp"
-                    android:layout_marginEnd="4dp"
-                    android:background="@drawable/border"
+                    android:singleLine="true"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:layout_marginHorizontal="1dp"
                     android:text="Sobremesas🍰"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/white" />
 
                 <Button
                     android:id="@+id/btn_drink_filter"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="4dp"
-                    android:background="@drawable/border"
+                    android:singleLine="true"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:layout_marginHorizontal="1dp"
                     android:text="Bebidas🥤"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/white" />
             </LinearLayout>
 
             <!-- Products List -->

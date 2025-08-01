@@ -2,9 +2,12 @@ package com.example.blfatsamples;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.Nullable;
@@ -46,15 +49,45 @@ public class MenuActivity extends AppCompatActivity {
         Button drinkFilterBtn = findViewById(R.id.btn_drink_filter);
         Button foodFilterBtn = findViewById(R.id.btn_food_filter);
         Button dessertFilterBtn = findViewById(R.id.btn_dessert_filter);
+        setButtonActive(drinkFilterBtn, false);
+        setButtonActive(foodFilterBtn, false);
+        setButtonActive(dessertFilterBtn, false);
+
+        EditText searchEdtx = findViewById(R.id.edit_text_search);
+        searchEdtx.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String finalText = editable.toString();
+                filter.setName(finalText.trim());
+                applyCurrentFilter();
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+        });
 
         foodFilterBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String category = "Pratos";
-                if (filter.getCategory() != category)
+
+                if (filter.getCategory() != category){
+                    setButtonActive(foodFilterBtn, true);
                     filter.setCategory(category);
-                else
+                }
+                else{
+                    setButtonActive(foodFilterBtn, false);
                     filter.setCategory("");
+                }
+                setButtonActive(drinkFilterBtn, false);
+                setButtonActive(dessertFilterBtn, false);
                 applyCurrentFilter();
             }
         });
@@ -63,10 +96,17 @@ public class MenuActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String category = "Doces";
-                if (filter.getCategory() != category)
+
+                if (filter.getCategory() != category){
+                    setButtonActive(dessertFilterBtn, true);
                     filter.setCategory(category);
-                else
+                }
+                else{
+                    setButtonActive(dessertFilterBtn, false);
                     filter.setCategory("");
+                }
+                setButtonActive(drinkFilterBtn, false);
+                setButtonActive(foodFilterBtn, false);
                 applyCurrentFilter();
             }
         });
@@ -75,10 +115,17 @@ public class MenuActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String category = "Bebidas";
-                if (filter.getCategory() != category)
+
+                if (filter.getCategory() != category){
+                    setButtonActive(drinkFilterBtn, true);
                     filter.setCategory(category);
-                else
+                }
+                else{
+                    setButtonActive(drinkFilterBtn, false);
                     filter.setCategory("");
+                }
+                setButtonActive(dessertFilterBtn, false);
+                setButtonActive(foodFilterBtn, false);
                 applyCurrentFilter();
             }
         });
@@ -184,6 +231,16 @@ public class MenuActivity extends AppCompatActivity {
             }
             return false;
         });
+    }
+
+    private void setButtonActive(Button button, boolean active)
+    {
+        if (active) {
+            button.setBackgroundColor(getColor(R.color.primary));
+            return;
+        }
+
+        button.setBackgroundColor(getColor(R.color.secondary));
     }
 
     private class ProductFilter{
