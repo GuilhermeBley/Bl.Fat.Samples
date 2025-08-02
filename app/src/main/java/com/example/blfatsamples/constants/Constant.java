@@ -39,11 +39,13 @@ public class Constant {
     }
 
     public static UserLoginResultModel getUserInfo(SharedPreferences preference) {
-        // TODO: Check if token is expired, if so, return null
 
         if (UserInfo == null){
             UserInfo = getByCacheOrDefault(preference);
         }
+
+        if (UserInfo != null && UserInfo.IsTokenExpired())
+            return  null;
 
         return UserInfo;
     }
