@@ -25,6 +25,17 @@ CREATE TABLE `Users` (
     UNIQUE INDEX `IX_Users_Email` (`Email`)
 );
 
+CREATE TABLE `OrderModel` (
+    `Id` BIGINT NOT NULL AUTO_INCREMENT,
+    `TotalValue` DOUBLE NOT NULL,
+    `TotalProductQuantity` INT NOT NULL,
+    `DeliveredAt` DATETIME NULL,
+    `StartedDeliveringAt` DATETIME NULL,
+    `CreatedAt` DATETIME NOT NULL,
+    `ProductsJson` TEXT NOT NULL,
+    PRIMARY KEY (`Id`)
+);
+
 -- Inserção de 100 produtos nas categorias Bebidas, Pratos e Doces
 INSERT INTO `Products` (`Name`, `Description`, `Category`, `ImageUrl`, `Price`, `CreatedAt`) VALUES
 -- Bebidas (30 produtos)

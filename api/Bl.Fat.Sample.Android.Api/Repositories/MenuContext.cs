@@ -9,6 +9,7 @@ public class MenuContext : DbContext
 
     public DbSet<ProductModel> Products { get; set; } = null!;
     public DbSet<UserModel> Users { get; set; } = null!;
+    public DbSet<OrderModel> Orders { get; set; } = null!;
 
     public MenuContext(IConfiguration configuration)
     {
@@ -55,6 +56,19 @@ public class MenuContext : DbContext
             b.HasIndex(p => p.Email)
                 .IsUnique()
                 .HasDatabaseName("IX_Users_Email");
+        });
+
+        modelBuilder.Entity<OrderModel>(b =>
+        {
+            b.HasKey(p => p.Id);
+            b.Property(p => p.Id).ValueGeneratedOnAdd();
+            b.Property(p => p.TotalProductQuantity).IsRequired();
+            b.Property(p => p.TotalValue).IsRequired();
+            b.Property(p => p.ProductsJson).IsRequired().HasColumnType("TEXT");
+            b.Property(p => p.CreatedAt).IsRequired();
+            b.Property(p => p.DeliveredAt).IsRequired(false);
+            b.Property(p => p.StartedDeliveringAt).IsRequired(false);
+            b.Ignore(p => p.Products);
         });
     }
 }
