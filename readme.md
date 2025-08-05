@@ -1,6 +1,6 @@
 # Fat Sample Android
 
-This project was created just for studying purposes. The context is a development of a mobile app about restaurant catalog.
+This project was created just for studying purposes. The context is a mobile app about restaurant catalog.
 This learning involves:
 - Android mobile app development
 - API Integration
@@ -15,4 +15,4 @@ This app has five main pages, being:
 - Orders
 
 ## How to use the project
-Execute the follow command to clone `https://github.com/GuilhermeBley/Bl.Fat.Samples.git`.
+Execute the following command to clone `https://github.com/GuilhermeBley/Bl.Fat.Samples.git`.
