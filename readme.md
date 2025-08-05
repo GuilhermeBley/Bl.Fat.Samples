@@ -14,5 +14,8 @@ This app has five main pages, being:
 - Configuration
 - Orders
 
+
+https://github.com/user-attachments/assets/f2ee5423-f5a2-4e39-a4f6-2bd7e254c6a1
+
 ## How to use the project
 Execute the following command to clone `https://github.com/GuilhermeBley/Bl.Fat.Samples.git`.
